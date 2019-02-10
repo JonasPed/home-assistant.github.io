@@ -36,15 +36,43 @@ From the Hass.io main panel open the add-on store.
 
 ### {% linkable_title Editing config via HASS Configurator %}
 
-The first add-on we should install is the HASS Configurator. With the HASS Configurator you'll be able to edit your Home Assistant configuration from the web interface.
+The first add-on we should install is the HASS Configurator. With the HASS Configurator, you'll be able to edit your Home Assistant configuration from the web interface.
 
-Go to the add-on store (see previous step), click on Configurator and click on INSTALL. When installation is complete the UI will go to the add-on details page for the configurator. Here you will be able to change settings, start and stop the add-on.
+Go to the add-on store (see the previous step), click on Configurator and click on "INSTALL". When installation is complete, the UI will go to the add-on details page for the configurator. Here you will be able to change settings, start and stop the add-on. Follow the steps below to setup the add-on.
 
- - Change the settings to set a password and click on save
- - Start the add-on
- - You will be able to click the "WEB UI" link to open the Web UI
+ - Set a password on the Config box, don't forget to use quotes on your password
+ 
+ ```json
+{
+  "username": "admin",
+  "password": "YOUR_PASSWORD_WITH_QUOTES",
+  "certfile": "fullchain.pem",
+  "keyfile": "privkey.pem",
+  "ssl": false,
+  "allowed_networks": [
+    "192.168.0.0/16"
+  ],
+  "banned_ips": [
+    "8.8.8.8"
+  ],
+  "banlimit": 0,
+  "ignore_pattern": [
+    "__pycache__"
+  ],
+  "dirsfirst": false
+}
+```
 
-Time for the first practice with the configurator. Add the following to `configuration.yaml` file to add a link to the Configurator in the sidebar:
+ - Click on "SAVE" to save your new password
+ - "START" the add-on
+ - You will be able to click the "OPEN WEB UI" link to open the Web UI on a new window
+ - Type your username and password that you recently saved
+
+Time for the first practice with the configurator. We're going to add the Configurator to the main Home Assistant sidebar:
+
+ - Click the folder icon in the top left of the configurator window to open the file browser sidebar. 
+ - Click the `configuration.yaml` file (in the `/config/` folder) to load it into the main Configurator edit window.
+ - Copy and paste the following to the end of the `configuration.yaml` file:
 
 ```yaml
 panel_iframe:
@@ -54,7 +82,9 @@ panel_iframe:
     url: http://hassio.local:3218
 ```
 
-Now restart Home Assistant for the changes to the configuration to take effect. You can do this by going to the config panel (Configuration in the sidebar) -> General -> Restart Home Assistant.
+ - Click the save icon in the top right to commit changes.
+ - Verify the configuration by going to the config panel (Configuration in the sidebar) -> General -> Click the "Check Config" button and you should get "Configuration valid!"
+ - Now Restart Home Assistant using the "restart" in the Server management section.
 
 ### {% linkable_title Editing config via Samba/Windows Networking %}
 

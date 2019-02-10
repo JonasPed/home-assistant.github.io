@@ -10,6 +10,7 @@ footer: true
 logo: home-assistant.png
 ha_category: Other
 ha_release: 0.23
+ha_qa_scale: internal
 ---
 
 The `persistent_notification` can be used to show a message on the frontend that has to be dismissed by the user.
@@ -54,6 +55,49 @@ action:
   data:
     notification_id: "1234"
 ```
+
+This automation example shows a notification when the Z-Wave network is starting and removes it when the network is ready.
+
+```yaml
+- alias: 'Z-Wave network is starting'
+  trigger:
+    - platform: event
+      event_type: zwave.network_start
+  action:
+    - service: persistent_notification.create
+      data:
+        title: "Z-Wave"
+        message: "Z-Wave network is starting..."
+        notification_id: zwave
+
+- alias: 'Z-Wave network is ready'
+  trigger:
+    - platform: event
+      event_type: zwave.network_ready
+  action:
+    - service: persistent_notification.dismiss
+      data:
+        notification_id: zwave
+```
+
+### {% linkable_title Markdown support %}
+
+The message attribute supports the [Markdown formatting syntax](https://daringfireball.net/projects/markdown/syntax). Some examples are:
+
+| Type | Message |
+| ---- | ------- |
+| Headline 1 | `# Headline` |
+| Headline 2 | `## Headline` |
+| Newline | `\n` |
+| Bold | `**My bold text**` |
+| Cursive | `*My cursive text*` |
+| Link | `[Link](https://home-assistant.io/)` |
+| Image | `![image](/local/my_image.jpg)` |
+
+<p class="note">
+  `/local/` in this context refers to the `.homeassistant/www/` folder.
+</p>
+
 
 ### {% linkable_title Create a persistent notification %}
 

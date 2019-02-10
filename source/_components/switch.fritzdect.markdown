@@ -24,6 +24,7 @@ Supported Firmwares (tested):
 
 - FRITZ!OS: 06.80 / FRITZ!DECT: 03.83
 - FRITZ!OS: 06.98-51288 (Beta) / FRITZ!DECT: 03.87
+- FRITZ!OS: 7.01 / FRITZ!DECT: 04.09
 
 To use your AVM FRITZ!DECT switch(es) in your installation, add the following to your `configuration.yaml` file:
 
@@ -35,11 +36,21 @@ switch:
     password: YOUR_PASSWORD
 ```
 
-Configuration variables:
-
-- **username** (*Required*): The username for your Fritz!Box.
-- **password** (*Required*): The password for your Fritz!Box.
-- **host** (*Optional*): The IP address/hostname of your Fritz!Box. Defaults to `fritz.box`.
+{% configuration %}
+username:
+  description: The username for your Fritz!Box.
+  required: true
+  type: string
+password:
+  description: The password for your Fritz!Box.
+  required: true
+  type: string
+host:
+  description:  The IP address/hostname of your Fritz!Box.
+  required: false
+  type: string
+  default: fritz.box
+{% endconfiguration %}
 
 It is recommended to create a dedicated user for Home Assistant and only allow access to "Smart Home".
 

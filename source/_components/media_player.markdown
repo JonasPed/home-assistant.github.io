@@ -32,7 +32,7 @@ Available services: `turn_on`, `turn_off`, `toggle`, `volume_up`, `volume_down`,
 | Service data attribute | Optional | Description                                      |
 |------------------------|----------|--------------------------------------------------|
 | `entity_id`            |      yes | Target a specific media player. Defaults to all. |
-| `volume_level`         |       no | Float for volume level                           |
+| `volume_level`         |       no | Float for volume level. Range 0..1               |
 
 #### {% linkable_title Service `media_player.media_seek` %}
 
@@ -55,6 +55,15 @@ Available services: `turn_on`, `turn_off`, `toggle`, `volume_up`, `volume_down`,
 | ---------------------- | -------- | ---------------------------------------------------- |
 | `entity_id`            |      yes | Target a specific media player. Defaults to all.     |
 | `source`               |       no | Name of the source to switch to. Platform dependent. |
+
+#### {% linkable_title Service `media_player.select_sound_mode` %}
+
+Currently only supported on [Denon AVR](/components/media_player.denonavr/) and  [Songpal](/components/media_player.songpal/).
+
+| Service data attribute | Optional | Description                                          |
+| ---------------------- | -------- | ---------------------------------------------------- |
+| `entity_id`            |       no | Target a specific media player. For example `media_player.marantz`|
+| `sound_mode`           |       no | Name of the sound mode to switch to. Platform dependent.|
 
 #### {% linkable_title Service `media_player.shuffle_set` %}
 

@@ -14,10 +14,12 @@ ha_release: 0.32
 
 The `mochad` switch platform lets you control an X10 enabled switch device.
 
+## {% linkable_title Configuration %}
+
 To enable this sensor, you first have to set up the [mochad component](/components/mochad/) and then add the following to your `configuration.yaml` file:
 
 ```yaml
-# Example configuration.yml entry
+# Example configuration.yaml entry
 switch:
   - platform: mochad
     devices:
@@ -25,9 +27,19 @@ switch:
       - address: a5
 ```
 
-Configuration variables:
-
-- **address** (*Required*): The X10 address of the switch.
-- **name** (*Optional*): The name of the switch. Default is: x10_switch_dev_*address*.
-- **comm_type** (*Optional*): pl (powerline) or rf (radio frequency). Default is pl.
-
+{% configuration %}
+address:
+  description: The X10 address of the switch.
+  required: true
+  type: string
+name:
+  description: The name of the switch.
+  required: false
+  default: x10_switch_dev_*address*
+  type: string
+comm_type:
+  description: pl (powerline) or rf (radio frequency).
+  required: false
+  default: pl
+  type: string
+{% endconfiguration %}

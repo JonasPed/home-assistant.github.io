@@ -40,20 +40,34 @@ light:
   - platform: flux_led
 ```
 
-Configuration variables:
-
-- **automatic_add** (*Optional*): To enable the automatic addition of lights on startup.
-- **devices** (*Optional*): A list of devices with their ip address
-
-Configuration variables within devices list:
-
-- **name**  (*Optional*): A friendly name for the device.
-- **mode**  (*Optional*): The chosen brightness mode; options are 'rgbw' and 'rgb', defaults to rgbw.
-- **protocol**  (*Optional*): Set this to 'ledenet' if you are using a ledenet bulb.
-
+{% configuration %}
+automatic_add:
+  description: To enable the automatic addition of lights on startup.
+  required: false
+  default: false
+  type: boolean
+devices:
+  description: A list of devices with their ip address
+  required: false
+  type: list
+  keys:
+    name:
+      description: A friendly name for the device.
+      required: false
+      type: string
+    mode:
+      description: "The chosen brightness mode, options are: 'rgbw' and 'rgb'."
+      required: false
+      default: rgbw
+      type: string
+    protocol:
+      description: Set this to 'ledenet' if you are using a ledenet bulb.
+      required: false
+      type: string
+{% endconfiguration %}
 
 <p class='note'>
-Depending on your controller or bulb type, there are two ways to configure brightness. 
+Depending on your controller or bulb type, there are two ways to configure brightness.
 The component defaults to rgbw. If your device has a separate white channel, you do not need to specify anything else; changing the white value will adjust the brightness of white channel keeping rgb color constant. However, if your device does not have a separate white channel, you will need to set the mode to rgb. In this mode, the device will keep the same color, and adjust the rgb values to dim or brighten the color.
 </p>
 
@@ -66,7 +80,7 @@ Will automatically search and add all lights on start up:
 # Example configuration.yaml entry
 light:
   - platform: flux_led
-    automatic_add: True
+    automatic_add: true
 ```
 
 Will add two lights with given name and create an automation rule to randomly set color each 45 seconds:
@@ -84,7 +98,7 @@ light:
 automation:
   alias: random_flux_living_room_lamp
   trigger:
-    platform: time
+    platform: time_pattern
     seconds: '/45'
   action:
     service: light.turn_on
@@ -107,6 +121,14 @@ Will add a light with rgb+white mode (default). White and RGB channels can be ad
     192.168.1.10:
       name: NAME
       mode: "rgbw"
+```
+
+Will add a light with white mode only. This is useful when only W channel is connected to an RGBW controller and allows the white level to be controlled via brightness value.
+
+```yaml
+    192.168.1.10:
+      name: NAME
+      mode: "w"
 ```
 
 Some devices such as the Ledenet RGBW controller use a slightly different protocol for communicating the brightness to each color channel. If your device is only turning on or off but not changing color or brightness try adding the LEDENET protocol.

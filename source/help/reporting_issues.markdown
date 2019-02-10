@@ -11,7 +11,7 @@ footer: true
 
 If you have an installation, a setup or a configuration issue please use our [Forum](https://community.home-assistant.io/) to get help. We have a big community which will help you if they can. 
 
-If you found a bug then please report it in one of our [trackers](help/#bugs-feature-requests-and-alike). To help you and our developers to identify the issue quickly, please fill out the provided template. The "weird" content you will see is there to render your entry in a nice format after submitting. It's just [markddown](https://guides.github.com/features/mastering-markdown/). 
+If you found a bug then please report it in one of our [trackers](/help/#bugs-feature-requests-and-alike). To help you and our developers to identify the issue quickly, please fill out the provided template. The "weird" content you will see is there to render your entry in a nice format after submitting. It's just [markddown](https://guides.github.com/features/mastering-markdown/). 
 
 Use the command below to get the Home Assistant release you are running from a command-line.
 
@@ -31,14 +31,14 @@ If possible, provide the latest release of which you know that the component or 
 
 ### {% linkable_title Operating environment (Hass.io/Docker/Windows/etc.) %}
 
-There are many different ways to run Home Assistant. In this section please mention which you are using, e.g. manual installation, [Hass.io](/hassio/), Hasbian or as container (Docker). It can help if you mention which operating system you are using because not all are supported on the same level.
+There are many different ways to run Home Assistant. In this section please mention which you are using, e.g., manual installation, [Hass.io](/hassio/), Hasbian or as container (Docker). It can help if you mention which operating system you are using because not all are supported on the same level.
 
 ### {% linkable_title Component/platform %}
 
 Please add the link to the documention of the component/platform in question. E.g.,
 
-- issue with the `random` sensor: [https://www.home-assistant.io/components/sensor.random/](/components/sensor.random/)
-- issue with the `hue` component: [https://www.home-assistant.io/components/hue/](/components/hue/)
+- issue with the `random` sensor: [/components/sensor.random/](/components/sensor.random/)
+- issue with the `hue` component: [/components/hue/](/components/hue/)
 
 ### {% linkable_title Description of problem %}
 

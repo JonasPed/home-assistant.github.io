@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Dovado"
+title: "Dovado Sensor"
 description: "How to integrate Dovado sensors within Home Assistant."
 date: 2016-11-05 08:00
 sidebar: true
@@ -13,7 +13,7 @@ ha_release: 0.32
 ha_iot_class: "Local Polling"
 ---
 
-The `dovado` platform let you monitor your router from [Dovado](http://www.dovado.com/)
+The `dovado` sensor platform let you monitor your [Dovado](http://www.dovado.com/) router.
 
 To add a Dovado sensor to your installation, add the following to your `configuration.yaml` file:
 
@@ -21,25 +21,24 @@ To add a Dovado sensor to your installation, add the following to your `configur
 # Example configuration.yaml entry
 sensor:
   - platform: dovado
-    username: YOUR_USERNAME
-    password: YOUR_PASSWORD
-    host: IP_ADDRESS
-    port: PORT
     sensors:
       - network
 ```
 
-Configuration variables:
-
-- **username** (*Required*): Your username.
-- **password** (*Required*): Your password.
-- **host** (*Optional*): The IP address of your router, e.g., `192.168.1.1`. If no host is provided, the gateway for the same network as Home Assistant will automatically be used.
-- **port** (*Optional*): The port number of your router, e.g., `999`. If no port is provided, the default API port (6435) will be used.
-- **sensors** array (*Required*): Conditions to display in the frontend.
-  - **network**: Network state (3G, 4G, etc).
-  - **signal**: The signal strength (%).
-  - **download**: The download speed.
-  - **upload**: The upload speed.
-  - **sms**: Number of unread text messages
-
-If the router provides SMS functionality, a service for sending SMS will also be registered in Home Assistant.
+{% configuration %}
+sensors:
+  description: Conditions to display in the frontend. Only accepts the values listed here.
+  required: true
+  type: list
+  keys:
+    network:
+      description: Creates a sensor for Network State (3G, 4G, etc.).
+    signal:
+      description: Creates a sensor for the signal strength.
+    download:
+      description: Creates a sensor for download speed.
+    upload:
+      description: Creates a sensor for download speed.
+    sms:
+      description: Creates a sensor for number of unread text messages.
+{% endconfiguration %}

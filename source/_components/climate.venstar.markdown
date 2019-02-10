@@ -25,7 +25,13 @@ Currently supported functionality:
 - Setting heat/cool temperature when the thermostat is in the appropriate mode.
 - Changing the operation mode of the thermostat (heat/cool/off/auto)
 - Turning the fan on/off
-- Setting the humidity level
+- Reading and setting the humidity level and limits
+- Turning away mode on/off
+- Turning hold mode on/off
+
+The following values are supported for the hold_mode state attribute:
+- `off`: *Enables* the scheduling functionality.
+- `temperature`: *Disables* the schedule and holds the set temperature indefinitely.
 
 Note - Please ensure you update your thermostat to the latest firmware. Currently tested on firmware 5.10.
 
@@ -55,12 +61,17 @@ ssl:
   description: Whether to use SSL or not when communicating.
   required: false
   type: boolean
-  default: False
+  default: false
 timeout:
   description: Number of seconds for API timeout.
   required: false
-  type: int
+  type: integer
   default: 5
+humidifier:
+  description: Report humidity and expose humidifier setpoints.
+  required: false
+  type: boolean
+  default: true
 {% endconfiguration %}
 
 ## {% linkable_title Full configuration sample %}
@@ -70,8 +81,9 @@ timeout:
 climate:
   - platform: venstar
     host: IP_OR_HOSTNAME_OF_THERMOSTAT
-    ssl: True/False
+    ssl: true
     username: OPTIONAL_AUTH_USER_HERE
     password: OPTIONAL_AUTH_PASS_HERE
     timeout: 5
+    humidifier: false
 ```

@@ -11,20 +11,18 @@ ha_category: Switch
 ha_release: 0.13
 ha_iot_class: "Local Push"
 logo: home-assistant.png
+ha_qa_scale: internal
 ---
 
 The `template` platform creates switches that combines components.
 
-For example, if you have a garage door with a toggle switch that operates the
-motor and a sensor that allows you know whether the door is open or closed,
-you can combine these into a switch that knows whether the garage door is open
-or closed.
+For example, if you have a garage door with a toggle switch that operates the motor and a sensor that allows you know whether the door is open or closed, you can combine these into a switch that knows whether the garage door is open or closed.
 
-This can simplify the GUI and make it easier to write automations. You can mark
-the components you have combined as `hidden` so they don't appear themselves.
+This can simplify the GUI and make it easier to write automations. You can mark the components you have combined as `hidden` so they don't appear themselves.
 
-To enable Template Switches in your installation, add the following to your
-`configuration.yaml` file:
+## {% linkable_title Configuration %}
+
+To enable Template Switches in your installation, add the following to your `configuration.yaml` file:
 
 {% raw %}
 ```yaml
@@ -39,7 +37,7 @@ switch:
           data:
             entity_id: switch.skylight_open
         turn_off:
-          service: switch.turn_on
+          service: switch.turn_off
           data:
             entity_id: switch.skylight_close
 ```
@@ -75,23 +73,19 @@ switch:
         description: Defines a template for the icon of the switch.
         required: false
         type: template
+      entity_picture_template:
+        description: Defines a template for the picture of the switch.
+        required: false
+        type: template
 {% endconfiguration %}
 
 ## {% linkable_title Considerations %}
 
-If you are using the state of a platform that takes extra time to load, the
-Template Switch may get an `unknown` state during startup. This results
-in error messages in your log file until that platform has completed loading.
-If you use `is_state()` function in your template, you can avoid this situation.
-For example, you would replace
-{% raw %}`{{ states.switch.source.state == 'on' }}`{% endraw %}
-with this equivalent that returns `true`/`false` and never gives an unknown
-result:
-{% raw %}`{{ is_state('switch.source', 'on') }}`{% endraw %}
+If you are using the state of a platform that takes extra time to load, the Template Switch may get an `unknown` state during startup. This results in error messages in your log file until that platform has completed loading. If you use `is_state()` function in your template, you can avoid this situation. For example, you would replace {% raw %}`{{ states.switch.source.state == 'on' }}`{% endraw %} with this equivalent that returns `true`/`false` and never gives an unknown result: {% raw %}`{{ is_state('switch.source', 'on') }}`{% endraw %}
 
 ## {% linkable_title Examples %}
 
-In this section you find some real life examples of how to use this switch.
+In this section you find some real-life examples of how to use this switch.
 
 ### {% linkable_title Copy Switch %}
 
@@ -117,8 +111,7 @@ switch:
 
 ### {% linkable_title Toggle Switch %}
 
-This example shows a switch that takes its state from a sensor, and toggles
-a switch.
+This example shows a switch that takes its state from a sensor and toggles a switch.
 
 {% raw %}
 ```yaml

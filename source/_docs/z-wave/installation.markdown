@@ -18,13 +18,14 @@ Installing the drivers might require some extra packages to be installed. Check 
 
 ### {% linkable_title Linux (except Hass.io) %}
 
-On Linux platforms (other than Hass.io) there is one dependency you will need to have installed ahead of time (included in `systemd-devel` on Fedora/RHEL systems):
+On Linux platforms (other than Hass.io) there two dependencies you will need to have installed ahead of time (included in `systemd-devel` on Fedora/RHEL systems):
 
 ```bash
 $ sudo apt-get install libudev-dev
+$ sudo apt-get install libopenzwave1.5-dev
 ```
 
-On Python 3.6 you may also have to install libpython3.6-dev, and possibly python3.6-dev.
+On Python 3.6 you may also have to install `libpython3.6-dev`, and possibly `python3.6-dev`.
 
 ### {% linkable_title macOS %}
 
@@ -40,10 +41,15 @@ On Raspberry Pi you will need to enable the serial interface in the `raspi-confi
 
 ## {% linkable_title Configuration %}
 
+<P class='note'>
+You can also use the Z-Wave *Integration* in the *Configuration* menu to set up the Z-Wave component.
+</p>
+
 ```yaml
 # Example configuration.yaml entry
 zwave:
   usb_path: /dev/ttyACM0
+  device_config: !include zwave_device_config.yaml
 ```
 
 {% configuration zwave %}
@@ -58,7 +64,7 @@ network_key:
   type: string
   default: None
 config_path:
-  description: The path to the Python OpenZWave configuration files.
+  description: "The path to the Python OpenZWave configuration files. NOTE: there is also the [update_config service](/docs/z-wave/services/) to perform updating the config within python-openzwave automatically."
   required: false
   type: string
   default: the 'config' that is installed by python-openzwave
@@ -66,7 +72,7 @@ autoheal:
   description: Allows disabling auto Z-Wave heal at midnight.
   required: false
   type: boolean
-  default: True
+  default: true
 polling_interval:
   description: The time period in milliseconds between polls of a nodes value. Be careful about using polling values below 30000 (30 seconds) as polling can flood the zwave network and cause problems.
   required: false
@@ -76,9 +82,9 @@ debug:
   description: Print verbose z-wave info to log.
   required: false
   type: boolean
-  default: False
+  default: false
 device_config / device_config_domain / device_config_glob:
-  description: This attribute contains node-specific override values. (For releases prior to 0.39 this variable is called **customize**) See [Customizing devices and services](/docs/configuration/customizing-devices/) for the format.
+  description: "This attribute contains node-specific override values. NOTE: This needs to be specified if you are going to use any of the following options. See [Customizing devices and services](/docs/configuration/customizing-devices/) for the format."
   required: false
   type: string, list
   keys:
@@ -86,7 +92,7 @@ device_config / device_config_domain / device_config_glob:
       description: Ignore this entity completely. It won't be shown in the Web Interface and no events are generated for it.
       required: false
       type: boolean
-      default: False
+      default: false
     polling_intensity:
       description: Enables polling of a value and sets the frequency of polling (0=none, 1=every time through the list, 2=every other time, etc). If not specified then your device will not be polled.
       required: false
@@ -96,18 +102,23 @@ device_config / device_config_domain / device_config_glob:
       description: Enable refreshing of the node value. Only the light component uses this.
       required: false
       type: boolean
-      default: False
+      default: false
     delay:
       description: Specify the delay for refreshing of node value. Only the light component uses this.
       required: false
       type: integer
-      default: 2
+      default: 5
     invert_openclose_buttons:
-      description: Inverts function of the open and close buttons for the cover domain.
+      description: Inverts function of the open and close buttons for the cover domain. This will not invert the position and state reporting.
       required: false
       type: boolean
-      default: False
+      default: false
 {% endconfiguration %}
+
+<p class='note'>
+As of Home Assistant 0.81, the Z-Wave `usb_path` and `network_key` options are configured through the Integrations page in Home Assistant. Specifying a `zwave:` section in configuration.yaml is no longer required unless you need to customize other settings, such as `device_config`, `polling_interval`, etc.
+</p>
+
 
 ### {% linkable_title Finding the controller path on Linux %}
 
@@ -138,7 +149,7 @@ $ dmesg | grep USB
 If Home Assistant (`hass`) runs with another user (e.g., *homeassistant* on Hassbian) give access to the stick with:
 
 ```bash
-$ sudo usermod -a -G dialout homeassistant
+$ sudo usermod -aG dialout homeassistant
 ```
 
 <p class='Note'>
@@ -160,14 +171,20 @@ $ ls /dev/cu.usbmodem*
 
 ### {% linkable_title Hass.io %}
 
-To enable Z-Wave, plug your Z-Wave USB stick into your Raspberry Pi 3 and add the following to your `configuration.yaml`:
+To enable Z-Wave, plug your Z-Wave USB stick into your system and add the following to your `configuration.yaml`:
 
 ```yaml
 zwave:
   usb_path: /dev/ttyACM0
 ```
 
-Depending on your Z-Wave device it may instead be `/dev/ttyAMA0` (eg Razberry board) or `/dev/ttyUSB0` (eg HUBUZB-1).
+If the above defaults don't work, you can check what hardware has been found using the [hassio command](/hassio/commandline/#hardware):
+
+```bash
+$ hassio hardware info
+```
+
+Or you can use the UI and look in the *System* section of the *Hass.io* menu. There you'll find a *Hardware* button which will list all the hardware found.
 
 ### {% linkable_title RancherOS %}
 
@@ -205,7 +222,7 @@ The first run after adding a device is when the `zwave` component will take time
 
 ### {% linkable_title Component could not be set up %}
 
-Sometimes the device may not be accessible and you'll get an error message upon startup about not being able to set up Z-Wave. Run the following command for your device path:
+Sometimes the device may not be accessible and you'll get an error message upon startup about not being able to set up Z-Wave. Run the following command for your device path (here we're using `/dev/ttyAMA0` for our Razberry board):
 
 ```bash
 $ ls -l /dev/ttyAMA0
@@ -222,6 +239,18 @@ The important pieces are the first piece `crw-rw----` and the group `dialout`. I
 ```bash
 $ sudo chgrp dialout /dev/ttyAMA0
 $ sudo chmod g+rw /dev/ttyAMA0
+```
+
+Check too that the account you're running Home Assistant as is in the `dialout` group. For instance, if you're using `homeassistant`:
+
+```bash
+$ groups homeassistant
+```
+
+That should include `dialout`, if it doesn't then:
+
+```bash
+$ sudo usermod -aG dialout homeassistant
 ```
 
 ### {% linkable_title Device path changes %}

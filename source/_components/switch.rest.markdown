@@ -15,6 +15,8 @@ ha_iot_class: "Local Polling"
 
 The `rest` switch platform allows you to control a given endpoint that supports a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer). The switch can get the state via GET and set the state via POST on a given REST resource.
 
+## {% linkable_title Configuration %}
+
 To enable this switch, add the following lines to your `configuration.yaml` file:
 
 ```yaml
@@ -42,7 +44,7 @@ name:
 timeout:
   description: Timeout for the request.
   required: false
-  type: int
+  type: integer
   default: 10
 body_on:
   description: "The body of the POST request that commands the switch to become enabled. This value can be a [template](/topics/templating/)."
@@ -66,6 +68,15 @@ password:
   description: The password for accessing the REST endpoint.
   required: false
   type: string
+headers:
+  description: The headers for the request.
+  required: false
+  type: list, string
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
 {% endconfiguration %}
 
 <p class='note warning'>
@@ -82,13 +93,18 @@ This example shows a switch that uses a [template](/topics/templating/) to allow
 {"is_active": "true"}
 ```
 
+{% raw %}
 ```yaml
 switch:
   - platform: rest
     resource: http://IP_ADDRESS/led_endpoint
     body_on: '{"active": "true"}'
     body_off: '{"active": "false"}'
-    is_on_template: '{% raw %}{{value_json.is_active}}{% endraw %}'
+    is_on_template: '{{ value_json.is_active }}'
+    headers:
+      Content-Type: application/json
+    verify_ssl: true
 ```
+{% endraw %}
 
 `body_on` and `body_off` can also depend on the state of the system. For example, to enable a remote temperature sensor tracking on a radio thermostat, one has to send the current value of the remote temperature sensor. This can be achieved by using the template `{% raw %}'{"rem_temp":{{states.sensor.bedroom_temp.state}}}'{% endraw %}`.
